@@ -89,7 +89,7 @@ stages:
           
           - task: AzureCLI@2
             inputs:
-              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              azureSubscription: 'demo-mslearn-tailspin-azure'
               scriptType: 'pscore'
               scriptLocation: 'inlineScript'
               inlineScript: |
@@ -125,18 +125,18 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              azureSubscription: 'demo-mslearn-tailspin-azure'
               appName: 'dev-josh-space-game'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
 
-- stage: 'Test'
-  displayName: 'Deploy to the test environment'
+- stage: 'Prod'
+  displayName: 'Deploy to the prod environment'
   dependsOn: Dev
   jobs:
   - deployment: Deploy
     pool:
       vmImage: 'ubuntu-18.04'
-    environment: test
+    environment: prod
     variables:
     - group: 'Release'
     strategy:
@@ -148,7 +148,7 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              azureSubscription: 'demo-mslearn-tailspin-azure'
               appType: 'webAppLinux'
               appName: 'josh-space-game'
               deployToSlotOrASE: true
@@ -158,7 +158,7 @@ stages:
             
           - task: AzureAppServiceManage@0
             inputs:
-              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              azureSubscription: 'demo-mslearn-tailspin-azure'
               Action: 'Swap Slots'
               WebAppName: 'josh-space-game'
               ResourceGroupName: 'tailspin-space-game-rg'
