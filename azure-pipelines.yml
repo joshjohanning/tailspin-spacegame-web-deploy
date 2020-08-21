@@ -108,5 +108,17 @@ stages:
             displayName: 'Azure App Service Deploy: website'
             inputs:
               azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              appType: 'webAppLinux'
               appName: 'josh-space-game'
+              deployToSlotOrASE: true
+              resourceGroupName: 'tailspin-space-game-rg'
+              slotName: 'swap'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+            
+          - task: AzureAppServiceManage@0
+            inputs:
+              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              Action: 'Swap Slots'
+              WebAppName: 'josh-space-game'
+              ResourceGroupName: 'tailspin-space-game-rg'
+              SourceSlot: 'swap'
