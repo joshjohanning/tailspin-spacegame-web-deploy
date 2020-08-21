@@ -81,6 +81,42 @@ stages:
           steps:
           - download: current
             artifact: drop
+          
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'Resource Manager - Tailspin - Space Game'
+              scriptType: 'ps'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                # Creates Resource Group, App Plan, and Web App
+                
+                # Azure Resource Info
+                $RG = "MyResourceGroup1"
+                $Location = "eastus2"
+                $Plan = "MyPlan1"
+                $WebApp = "MyUniqueAppName-josh1"
+                
+                # tag info
+                $Owner = "WebTeam"
+                $CostCenter = "123456"
+                $Program = "web"
+                $Tags = "'Owner=$Owner' 'CostCenter=$CostCenter' 'Program=$Program'"
+                
+                # create resoure group if doesn't exist
+                az group create -l $Location -n $RG --tags $Tags
+                
+                # create app service and webapp if webapp doesn't exist
+                $result = az webapp list -g $RG | ConvertFrom-Json
+                if ($result.name -ne $WebApp) {
+                    write-host "creating app service plan and webapp"
+                    az appservice plan create -g $RG -l $Location -n $Plan --sku S1 --tags $Tags
+                    az webapp create -g $RG -p $Plan -n $WebApp --tags $Tags
+                    az webapp deployment slot create -n $WebApp -g $RG --slot staging
+                }
+                else
+                {
+                    write-host "web app already created"
+                }
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
