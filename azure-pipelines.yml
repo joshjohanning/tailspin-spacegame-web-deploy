@@ -85,7 +85,7 @@ stages:
           - task: AzureCLI@2
             inputs:
               azureSubscription: 'Resource Manager - Tailspin - Space Game'
-              scriptType: 'ps'
+              scriptType: 'pscore'
               scriptLocation: 'inlineScript'
               inlineScript: |
                 # Creates Resource Group, App Plan, and Web App
