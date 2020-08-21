@@ -128,6 +128,12 @@ stages:
               azureSubscription: 'demo-mslearn-tailspin-azure'
               appName: 'dev-josh-space-game'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Tailspin.SpaceGame.Web.zip'
+              
+  - job: smoketest
+    dependsOn: Deploy
+    steps:
+      - script: curl -I dev-josh-space-game.azurewebsites.net
+
 
 - stage: 'Prod'
   displayName: 'Deploy to the prod environment'
