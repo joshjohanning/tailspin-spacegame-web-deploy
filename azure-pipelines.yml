@@ -96,7 +96,7 @@ stages:
                 # Creates Resource Group, App Plan, and Web App
                 
                 # Azure Resource Info
-                $RG = "MyResourceGroup1"
+                $RG = "tailspin-space-game-rg"
                 $Location = "eastus2"
                 $Plan = "MyPlan1"
                 $WebApp = "MyUniqueAppName-josh1"
