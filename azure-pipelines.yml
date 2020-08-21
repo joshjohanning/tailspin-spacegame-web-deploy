@@ -56,7 +56,7 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: 'test'
-        projects: '''**/*.csproj'
+        projects: '**/*Test.csproj'
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish the project - $(buildConfiguration)'
@@ -98,8 +98,8 @@ stages:
                 # Azure Resource Info
                 $RG = "tailspin-space-game-rg"
                 $Location = "eastus2"
-                $Plan = "MyPlan1"
-                $WebApp = "MyUniqueAppName-josh1"
+                $Plan = "ASP-tailspinspacegamerg-free"
+                $WebApp = "dev-josh-space-game"
                 
                 # tag info
                 $Owner = "WebTeam"
@@ -114,9 +114,9 @@ stages:
                 $result = az webapp list -g $RG | ConvertFrom-Json
                 if ($result.name -ne $WebApp) {
                     write-host "creating app service plan and webapp"
-                    az appservice plan create -g $RG -l $Location -n $Plan --sku S1 --tags $Tags
-                    az webapp create -g $RG -p $Plan -n $WebApp --tags $Tags
-                    az webapp deployment slot create -n $WebApp -g $RG --slot staging
+                    az appservice plan create -g $RG -l $Location -n $Plan --sku S1 --tags $Tags --is-linux
+                    az webapp create -g $RG -p $Plan -n $WebApp --tags $Tags --runtime '"DOTNETCORE|3.1"'
+                    az webapp deployment slot create -n $WebApp -g $RG --slot swap
                 }
                 else
                 {
