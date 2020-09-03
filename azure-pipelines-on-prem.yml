@@ -84,6 +84,7 @@ stages:
     environment: 
       name: 'on-prem vm'
       resourceType: 'VirtualMachine'
+      tags: 'api'
     variables:
     - group: Release
     strategy:
