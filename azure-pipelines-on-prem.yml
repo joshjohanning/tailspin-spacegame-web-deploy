@@ -80,7 +80,10 @@ stages:
   jobs:
   - deployment: Deploy
     pool: 'default'
-    environment: 'on-prem vm'
+    environment: 
+      name: 'on-prem vm'
+      resourceType: 'VirtualMachine'
+      tags: 'api'
     variables:
     - group: Release
     strategy:
@@ -91,11 +94,11 @@ stages:
             artifact: drop
 
           
-          - task: CopyFiles@2
-            inputs:
-              SourceFolder: '$(pipeline.workspace)'
-              Contents: '**\*.zip'
-              TargetFolder: 'C:\temp'
+          # - task: CopyFiles@2
+          #   inputs:
+          #     SourceFolder: '$(pipeline.workspace)'
+          #     Contents: '**\*.zip'
+          #     TargetFolder: 'C:\temp'
 
           # - task: AzureWebApp@1
           #   displayName: 'Azure App Service Deploy: website'
@@ -107,5 +110,5 @@ stages:
           - task: IISWebAppDeploymentOnMachineGroup@0
             inputs:
               WebSiteName: 'Default Web Site'
-              Package: 'C:\temp\**\*.zip'
+              Package: '$(pipeline.workspace)\**\*.zip'
               XmlVariableSubstitution: true
