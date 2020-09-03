@@ -91,7 +91,11 @@ stages:
             artifact: drop
 
           
-          
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: '$(pipeline.workspace)'
+              Contents: '**\*.zip'
+              TargetFolder: 'C:\temp'
 
           # - task: AzureWebApp@1
           #   displayName: 'Azure App Service Deploy: website'
@@ -103,5 +107,5 @@ stages:
           - task: IISWebAppDeploymentOnMachineGroup@0
             inputs:
               WebSiteName: 'Default Web Site'
-              Package: '$(Pipeline.Workspace)\**\*.zip'
+              Package: 'C:\temp\**\*.zip'
               XmlVariableSubstitution: true
