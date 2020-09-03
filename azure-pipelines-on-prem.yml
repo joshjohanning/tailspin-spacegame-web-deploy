@@ -1,5 +1,11 @@
 trigger:
-- '*'
+  branches:
+    include: 
+    - blue-green
+    - blue-green-template
+  paths:
+    exclude:
+    - azure-pipelines.yml
 
 variables:
   buildConfiguration: 'Release'
