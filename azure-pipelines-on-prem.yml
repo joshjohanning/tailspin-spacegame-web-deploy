@@ -78,7 +78,7 @@ stages:
   displayName: 'Deploy to the dev environment'
   dependsOn: Build
   jobs:
-  - deployment: Deploy
+  - deployment: deployonprem
     pool:
       vmImage: 'ubuntu-18.04'
     environment: 
