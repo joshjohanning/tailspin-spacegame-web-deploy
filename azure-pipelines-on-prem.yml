@@ -74,7 +74,7 @@ stages:
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
 
-- stage: 'Dev-rolling'
+- stage: 'Dev_rolling'
   displayName: 'Deploy to the dev environment'
   dependsOn: Build
   jobs:
@@ -106,7 +106,7 @@ stages:
               TakeAppOfflineFlag: true
               XmlVariableSubstitution: true
 
-- stage: 'Dev-runonce'
+- stage: 'Dev_runonce'
   displayName: 'Deploy to the dev environment'
   dependsOn: Build
   jobs:
