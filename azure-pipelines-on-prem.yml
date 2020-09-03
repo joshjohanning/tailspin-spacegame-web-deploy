@@ -16,7 +16,8 @@ stages:
   jobs: 
   - job: 'Build'
     displayName: 'Build job'
-    pool: 'default'
+    pool:
+      vmImage: 'ubuntu-18.04'
 
     variables:
       wwwrootDir: 'Tailspin.SpaceGame.Web/wwwroot'
@@ -78,8 +79,7 @@ stages:
   dependsOn: Build
   jobs:
   - deployment: Deploy
-    pool:
-      vmImage: 'ubuntu-18.04'
+    pool: 'default'
     environment: 'on-prem vm'
     variables:
     - group: Release
