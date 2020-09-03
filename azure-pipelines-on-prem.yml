@@ -94,20 +94,30 @@ stages:
           - download: current
             artifact: drop
 
-          
-          # - task: CopyFiles@2
-          #   inputs:
-          #     SourceFolder: '$(pipeline.workspace)'
-          #     Contents: '**\*.zip'
-          #     TargetFolder: 'C:\temp'
+        
+          - task: IISWebAppDeploymentOnMachineGroup@0
+            inputs:
+              WebSiteName: 'Default Web Site'
+              Package: '$(Agent.BuildDirectory)\drop\Release\Tailspin.SpaceGame.Web.zip'
+              XmlVariableSubstitution: true
 
-          # - task: AzureWebApp@1
-          #   displayName: 'Azure App Service Deploy: website'
-          #   inputs:
-          #     azureSubscription: 'demo-mslearn-tailspin-azure'
-          #     appName: 'dev-josh-space-game'
-          #     package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Tailspin.SpaceGame.Web.zip'
-          
+  - deployment: deployonprem1
+    pool:
+      vmImage: 'ubuntu-18.04'
+    environment: 
+      name: 'on-prem vm'
+      resourceType: 'VirtualMachine'
+      tags: 'api'
+    variables:
+    - group: Release
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+
+        
           - task: IISWebAppDeploymentOnMachineGroup@0
             inputs:
               WebSiteName: 'Default Web Site'
