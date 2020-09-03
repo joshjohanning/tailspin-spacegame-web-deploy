@@ -120,6 +120,6 @@ stages:
         
           - task: IISWebAppDeploymentOnMachineGroup@0
             inputs:
-              WebSiteName: 'Default Web Site'
+              WebSiteName: 'Space Game'
               Package: '$(Agent.BuildDirectory)\drop\Release\Tailspin.SpaceGame.Web.zip'
               XmlVariableSubstitution: true
