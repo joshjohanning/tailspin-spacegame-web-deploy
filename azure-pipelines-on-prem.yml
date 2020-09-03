@@ -77,7 +77,7 @@ stages:
   - deployment: Deploy
     pool:
       vmImage: 'ubuntu-18.04'
-    environment: dev
+    environment: 'on-prem vm'
     variables:
     - group: Release
     strategy:
@@ -87,79 +87,16 @@ stages:
           - download: current
             artifact: drop
           
-          - task: AzureCLI@2
-            inputs:
-              azureSubscription: 'demo-mslearn-tailspin-azure'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                # Creates Resource Group, App Plan, and Web App
-                
-                # Azure Resource Info
-                $RG = "tailspin-space-game-rg"
-                $Location = "eastus2"
-                $Plan = "ASP-tailspinspacegamerg-free"
-                $WebApp = "dev-josh-space-game"
-                
-                # tag info
-                $Owner = "WebTeam"
-                $CostCenter = "123456"
-                $Program = "web"
-                $Tags = "'Owner=$Owner' 'CostCenter=$CostCenter' 'Program=$Program'"
-                
-                # create resoure group if doesn't exist
-                az group create -l $Location -n $RG --tags $Tags
-                
-                # create app service and webapp if webapp doesn't exist
-                $result = az webapp list -g $RG | ConvertFrom-Json
-                if ($result.name -ne $WebApp) {
-                    write-host "creating app service plan and webapp"
-                    az appservice plan create -g $RG -l $Location -n $Plan --sku S1 --tags $Tags --is-linux
-                    az webapp create -g $RG -p $Plan -n $WebApp --tags $Tags --runtime '"DOTNETCORE|3.1"'
-                    az webapp deployment slot create -n $WebApp -g $RG --slot swap
-                }
-                else
-                {
-                    write-host "web app already created"
-                }
-          - task: AzureWebApp@1
-            displayName: 'Azure App Service Deploy: website'
-            inputs:
-              azureSubscription: 'demo-mslearn-tailspin-azure'
-              appName: 'dev-josh-space-game'
-              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Tailspin.SpaceGame.Web.zip'
 
-- stage: 'Prod'
-  displayName: 'Deploy to the prod environment'
-  dependsOn: Dev
-  jobs:
-  - deployment: Deploy
-    pool:
-      vmImage: 'ubuntu-18.04'
-    environment: prod
-    variables:
-    - group: 'Release'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            artifact: drop
-          - task: AzureWebApp@1
-            displayName: 'Azure App Service Deploy: website'
+          # - task: AzureWebApp@1
+          #   displayName: 'Azure App Service Deploy: website'
+          #   inputs:
+          #     azureSubscription: 'demo-mslearn-tailspin-azure'
+          #     appName: 'dev-josh-space-game'
+          #     package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Tailspin.SpaceGame.Web.zip'
+          
+          - task: IISWebAppDeploymentOnMachineGroup@0
             inputs:
-              azureSubscription: 'demo-mslearn-tailspin-azure'
-              appType: 'webAppLinux'
-              appName: 'josh-space-game'
-              deployToSlotOrASE: true
-              resourceGroupName: 'tailspin-space-game-rg'
-              slotName: 'swap'
-              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Tailspin.SpaceGame.Web.zip'
-            
-          - task: AzureAppServiceManage@0
-            inputs:
-              azureSubscription: 'demo-mslearn-tailspin-azure'
-              Action: 'Swap Slots'
-              WebAppName: 'josh-space-game'
-              ResourceGroupName: 'tailspin-space-game-rg'
-              SourceSlot: 'swap'
+              WebSiteName: 'Default Web Site'
+              Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
+              XmlVariableSubstitution: true
