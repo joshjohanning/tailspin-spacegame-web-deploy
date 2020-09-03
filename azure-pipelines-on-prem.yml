@@ -89,6 +89,8 @@ stages:
           steps:
           - download: current
             artifact: drop
+
+          
           
 
           # - task: AzureWebApp@1
@@ -101,5 +103,5 @@ stages:
           - task: IISWebAppDeploymentOnMachineGroup@0
             inputs:
               WebSiteName: 'Default Web Site'
-              Package: '$(System.DefaultWorkingDirectory)\**\*.zip'
+              Package: '$(Pipeline.Workspace)\**\*.zip'
               XmlVariableSubstitution: true
