@@ -101,25 +101,25 @@ stages:
               Package: '$(Agent.BuildDirectory)\drop\Release\Tailspin.SpaceGame.Web.zip'
               XmlVariableSubstitution: true
 
-  - deployment: deployonprem1
-    pool:
-      vmImage: 'ubuntu-18.04'
-    environment: 
-      name: 'on-prem vm'
-      resourceType: 'VirtualMachine'
-      tags: 'api'
-    variables:
-    - group: Release
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            artifact: drop
+  # - deployment: deployonprem1
+  #   pool:
+  #     vmImage: 'ubuntu-18.04'
+  #   environment: 
+  #     name: 'on-prem vm'
+  #     resourceType: 'VirtualMachine'
+  #     tags: 'api'
+  #   variables:
+  #   - group: Release
+  #   strategy:
+  #     runOnce:
+  #       deploy:
+  #         steps:
+  #         - download: current
+  #           artifact: drop
 
         
-          - task: IISWebAppDeploymentOnMachineGroup@0
-            inputs:
-              WebSiteName: 'Space Game'
-              Package: '$(Agent.BuildDirectory)\drop\Release\Tailspin.SpaceGame.Web.zip'
-              XmlVariableSubstitution: true
+  #         - task: IISWebAppDeploymentOnMachineGroup@0
+  #           inputs:
+  #             WebSiteName: 'Space Game'
+  #             Package: '$(Agent.BuildDirectory)\drop\Release\Tailspin.SpaceGame.Web.zip'
+  #             XmlVariableSubstitution: true
