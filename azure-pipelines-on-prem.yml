@@ -111,5 +111,5 @@ stages:
           - task: IISWebAppDeploymentOnMachineGroup@0
             inputs:
               WebSiteName: 'Default Web Site'
-              Package: '$(pipeline.workspace)\**\*.zip'
+              Package: '$(Agent.BuildDirectory)\**\*.zip'
               XmlVariableSubstitution: true
