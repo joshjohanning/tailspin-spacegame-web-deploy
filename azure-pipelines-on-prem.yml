@@ -79,6 +79,8 @@ stages:
   dependsOn: Build
   jobs:
   - deployment: Deploy
+    pool:
+      vmImage: 'ubuntu-18.04'
     environment: 
       name: 'on-prem vm'
       resourceType: 'VirtualMachine'
