@@ -74,45 +74,43 @@ stages:
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
 
-- stage: 'Dev_rolling'
-  displayName: 'Deploy to the dev environment'
-  dependsOn: Build
-  jobs:
-  - deployment: deployonprem
-    pool:
-      vmImage: 'ubuntu-18.04'
-    environment: 
-      name: 'on-prem vm'
-      resourceType: 'VirtualMachine'
-      tags: 'api'
-    variables:
-    - group: Release
-    strategy:
-      rolling:
-        maxParallel: 2  #for percentages, mention as x%
-        preDeploy:
-          steps:
-          - download: current
-            artifact: drop
-          - script: echo initialize, cleanup, backup, install certs
+# - stage: 'Dev_rolling'
+#   displayName: 'Deploy to the dev environment'
+#   dependsOn: Build
+#   jobs:
+#   - deployment: deployonprem
+#     pool:
+#       vmImage: 'ubuntu-18.04'
+#     environment: 
+#       name: 'on-prem vm'
+#       resourceType: 'VirtualMachine'
+#       tags: 'api'
+#     variables:
+#     - group: Release
+#     strategy:
+#       rolling:
+#         maxParallel: 2  #for percentages, mention as x%
+#         preDeploy:
+#           steps:
+#           - download: current
+#             artifact: drop
+#           - script: echo initialize, cleanup, backup, install certs
 
-        deploy:
-          steps:
+#         deploy:
+#           steps:
         
-          - task: IISWebAppDeploymentOnMachineGroup@0
-            inputs:
-              WebSiteName: 'Default Web Site'
-              Package: '$(Agent.BuildDirectory)\drop\Release\Tailspin.SpaceGame.Web.zip'
-              TakeAppOfflineFlag: true
-              XmlVariableSubstitution: true
+#           - task: IISWebAppDeploymentOnMachineGroup@0
+#             inputs:
+#               WebSiteName: 'Default Web Site'
+#               Package: '$(Agent.BuildDirectory)\drop\Release\Tailspin.SpaceGame.Web.zip'
+#               TakeAppOfflineFlag: true
+#               XmlVariableSubstitution: true
 
 - stage: 'Dev_runonce'
   displayName: 'Deploy to the dev environment'
   dependsOn: Build
   jobs:
   - deployment: deployonprem
-    pool:
-      vmImage: 'ubuntu-18.04'
     environment: 
       name: 'on-prem vm'
       resourceType: 'VirtualMachine'
