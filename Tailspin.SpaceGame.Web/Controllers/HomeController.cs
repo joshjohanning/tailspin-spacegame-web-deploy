@@ -5,24 +5,30 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TailSpin.SpaceGame.Web.Models;
 
 namespace TailSpin.SpaceGame.Web.Controllers
 {
     public class HomeController : Controller
     {
+
         // High score repository.
         private readonly IDocumentDBRepository<Score> _scoreRepository;
         // User profile repository.
         private readonly IDocumentDBRepository<Profile> _profileRespository;
 
+        private readonly ILogger<HomeController> _logger;
+
         public HomeController(
             IDocumentDBRepository<Score> scoreRepository,
-            IDocumentDBRepository<Profile> profileRespository
+            IDocumentDBRepository<Profile> profileRespository,
+            ILogger<HomeController> logger
             )
         {
             _scoreRepository = scoreRepository;
             _profileRespository = profileRespository;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index(
@@ -103,11 +109,12 @@ namespace TailSpin.SpaceGame.Web.Controllers
                 // Combine each score with its profile.
                 vm.Scores = scores.Zip(profiles, (score, profile) => new ScoreProfile { Score = score, Profile = profile.Result });
 
-                System.Diagnostics.Trace.WriteLine("Verbose message, in the LeaderboardViewModel method in HomeController.cs");
-                System.Diagnostics.Trace.TraceError("Error message, in the LeaderboardViewModel method in HomeController.cs");
-                System.Diagnostics.Trace.TraceWarning("Warning  message, in the LeaderboardViewModel method in HomeController.cs");
-                System.Diagnostics.Trace.TraceInformation("Information message, in the LeaderboardViewModel method in HomeController.cs");
-                System.Console.WriteLine("Test");
+                var iteracion = 1;
+                _logger.LogDebug($"Debug {iteracion}");
+                _logger.LogInformation($"Information {iteracion}");
+                _logger.LogWarning($"Warning {iteracion}");
+                _logger.LogError($"Error {iteracion}");
+                _logger.LogCritical($"Critical {iteracion}");
 
                 return View(vm);
             }
