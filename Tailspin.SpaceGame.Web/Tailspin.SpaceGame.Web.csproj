@@ -3,9 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <ProjectGuid>{A0C4E31E-AC75-4F39-9F59-0AA19D9B8F46}</ProjectGuid>
+    <UserSecretsId>73885fba-5f3f-4915-8581-2274de1ef9da</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/93ddb8b3-ddb9-4d1c-ba59-421456e65538/resourceGroups/tailspin-space-game-rg/providers/microsoft.insights/components/tailspin-space-game-app-insights</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.13.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 

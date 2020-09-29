@@ -103,6 +103,11 @@ namespace TailSpin.SpaceGame.Web.Controllers
                 // Combine each score with its profile.
                 vm.Scores = scores.Zip(profiles, (score, profile) => new ScoreProfile { Score = score, Profile = profile.Result });
 
+                System.Diagnostics.Trace.WriteLine("Verbose message, in the LeaderboardViewModel method in HomeController.cs");
+                System.Diagnostics.Trace.TraceError("Error message, in the LeaderboardViewModel method in HomeController.cs");
+                System.Diagnostics.Trace.TraceWarning("Warning  message, in the LeaderboardViewModel method in HomeController.cs");
+                System.Diagnostics.Trace.TraceInformation("Information message, in the LeaderboardViewModel method in HomeController.cs");
+
                 return View(vm);
             }
             catch (Exception)
