@@ -128,7 +128,7 @@ stages:
               cleanDestinationFolder: true
               destinationFolder: $(pipeline.workspace)/extract
 
-          # - task: ReplaceTokens@1
+          # - task: colinsalmcorner.colinsalmcorner-buildtasks.replace-tokens-task.ReplaceTokens@1
           #   inputs:
           #     sourcePath: '$(pipeline.workspace)/extract'
           #     filePattern: '**/appsettings.json'
