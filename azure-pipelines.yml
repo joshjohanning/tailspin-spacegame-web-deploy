@@ -122,6 +122,17 @@ stages:
                 {
                     write-host "web app already created"
                 }
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: '**/*.zip'
+              cleanDestinationFolder: true
+              destinationFolder: $(pipeline.workspace)/extract
+
+          - task: ReplaceTokens@1
+            inputs:
+              sourcePath: '$(pipeline.workspace)/extract'
+              filePattern: '**/serviceDependencies.json'
+              tokenRegex: '__(\w+)__'
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
