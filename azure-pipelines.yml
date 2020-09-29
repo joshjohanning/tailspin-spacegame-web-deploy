@@ -138,7 +138,7 @@ stages:
             inputs:
               azureSubscription: 'demo-mslearn-tailspin-azure'
               appName: 'dev-josh-space-game'
-              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Tailspin.SpaceGame.Web.zip'
+              package: '$(pipeline.workspace)/extract'
               
   - job: smoketest
     dependsOn: Deploy
@@ -171,7 +171,7 @@ stages:
               deployToSlotOrASE: true
               resourceGroupName: 'tailspin-space-game-rg'
               slotName: 'swap'
-              package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/Tailspin.SpaceGame.Web.zip'
+              package: '$(pipeline.workspace)/extract'
             
           - task: AzureAppServiceManage@0
             inputs:
