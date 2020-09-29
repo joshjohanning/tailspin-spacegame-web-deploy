@@ -128,11 +128,20 @@ stages:
               cleanDestinationFolder: true
               destinationFolder: $(pipeline.workspace)/extract
 
-          - task: ReplaceTokens@1
+          # - task: ReplaceTokens@1
+          #   inputs:
+          #     sourcePath: '$(pipeline.workspace)/extract'
+          #     filePattern: '**/appsettings.json'
+          #     tokenRegex: '__(\w+)__'
+              
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+            displayName: 'Replace tokens'
             inputs:
-              sourcePath: '$(pipeline.workspace)/extract'
-              filePattern: '**/appsettings.json'
-              tokenRegex: '__(\w+)__'
+              rootDirectory: '$(pipeline.workspace)'
+              targetFiles: '**/appsettings.json'
+              escapeType: none
+              verbosity: detailed
+          
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
