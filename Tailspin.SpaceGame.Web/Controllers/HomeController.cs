@@ -107,6 +107,7 @@ namespace TailSpin.SpaceGame.Web.Controllers
                 System.Diagnostics.Trace.TraceError("Error message, in the LeaderboardViewModel method in HomeController.cs");
                 System.Diagnostics.Trace.TraceWarning("Warning  message, in the LeaderboardViewModel method in HomeController.cs");
                 System.Diagnostics.Trace.TraceInformation("Information message, in the LeaderboardViewModel method in HomeController.cs");
+                System.Console.WriteLine("Test");
 
                 return View(vm);
             }
