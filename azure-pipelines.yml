@@ -124,7 +124,7 @@ stages:
                 }
           - task: ExtractFiles@1
             inputs:
-              archiveFilePatterns: '**/*.zip'
+              archiveFilePatterns: '$(pipeline.workspace)/**/*.zip'
               cleanDestinationFolder: true
               destinationFolder: $(pipeline.workspace)/extract
 
