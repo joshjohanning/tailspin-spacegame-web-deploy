@@ -131,7 +131,7 @@ stages:
           - task: ReplaceTokens@1
             inputs:
               sourcePath: '$(pipeline.workspace)/extract'
-              filePattern: '**/serviceDependencies.json'
+              filePattern: '**/appsettings.json'
               tokenRegex: '__(\w+)__'
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
