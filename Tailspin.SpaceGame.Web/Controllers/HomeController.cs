@@ -109,12 +109,12 @@ namespace TailSpin.SpaceGame.Web.Controllers
                 // Combine each score with its profile.
                 vm.Scores = scores.Zip(profiles, (score, profile) => new ScoreProfile { Score = score, Profile = profile.Result });
 
-                var iteracion = 1;
-                _logger.LogDebug($"Debug {iteracion}");
-                _logger.LogInformation($"Information {iteracion}");
-                _logger.LogWarning($"Warning {iteracion}");
-                _logger.LogError($"Error {iteracion}");
-                _logger.LogCritical($"Critical {iteracion}");
+                var number = 1;
+                _logger.LogDebug($"Debug {number}");
+                _logger.LogInformation($"Information {number}");
+                _logger.LogWarning($"Warning {number}");
+                _logger.LogError($"Error {number}");
+                _logger.LogCritical($"Critical {number}");
 
                 return View(vm);
             }

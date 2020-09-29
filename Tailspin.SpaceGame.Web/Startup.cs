@@ -39,7 +39,7 @@ namespace TailSpin.SpaceGame.Web
             services.AddSingleton<IDocumentDBRepository<Score>>(new LocalDocumentDBRepository<Score>(@"SampleData/scores.json"));
             services.AddSingleton<IDocumentDBRepository<Profile>>(new LocalDocumentDBRepository<Profile>(@"SampleData/profiles.json"));
             services.AddApplicationInsightsTelemetry();
-            services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Trace));
+            //services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Trace));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
