@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AspNetCoreInjectConfigurationRazor.Configuration;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -39,7 +40,9 @@ namespace TailSpin.SpaceGame.Web
             services.AddSingleton<IDocumentDBRepository<Score>>(new LocalDocumentDBRepository<Score>(@"SampleData/scores.json"));
             services.AddSingleton<IDocumentDBRepository<Profile>>(new LocalDocumentDBRepository<Profile>(@"SampleData/profiles.json"));
             services.AddApplicationInsightsTelemetry();
-            //services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Trace));
+
+            services.Configure<ApplicationInsights>
+                (Configuration.GetSection("ApplicationInsights"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
