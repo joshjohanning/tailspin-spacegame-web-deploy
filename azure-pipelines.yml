@@ -96,10 +96,10 @@ stages:
                 # Creates Resource Group, App Plan, and Web App
                 
                 # Azure Resource Info
-                $RG = "tailspin-space-game-rg"
-                $Location = "eastus2"
-                $Plan = "ASP-tailspinspacegamerg-free"
-                $WebApp = "dev-josh-space-game"
+                $RG = "tailspin-space-game-rg1"
+                $Location = "centralus"
+                $Plan = "ASP-tailspinspacegamerg-free1"
+                $WebApp = "dev-josh-space-game1"
                 
                 # tag info
                 $Owner = "WebTeam"
