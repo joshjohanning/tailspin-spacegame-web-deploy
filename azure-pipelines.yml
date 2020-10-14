@@ -105,7 +105,7 @@ stages:
                 $Owner = "WebTeam"
                 $CostCenter = "123456"
                 $Program = "web"
-                $Tags = "Owner=$Owner CostCenter=$CostCenter Program=$Program"
+                $Tags = "'Owner=$Owner' 'CostCenter=$CostCenter' 'Program=$Program'"
                 
                 # create resoure group if doesn't exist
                 az group create -l $Location -n $RG --tags $Tags
