@@ -96,11 +96,16 @@ stages:
                 # Creates Resource Group, App Plan, and Web App
                 
                 # Azure Resource Info
-                $RG = "tailspin-space-game-rg1"
+                $RG = "tailspin-space-game-rg2"
                 $Location = "centralus"
-                $Plan = "ASP-tailspinspacegamerg-free1"
-                $WebApp = "dev-josh-space-game1"
-                
+                $Plan = "ASP-tailspinspacegamerg-free2"
+                $WebApp = "dev-josh-space-game2"
+                $Runtime = '"DOTNETCORE|3.1"'
+                # accepted values: B1, B2, B3, D1, F1, FREE, I1, I2, I3, P1V2, P1V3, P2V2, P2V3, P3V2, P3V3, PC2, PC3, PC4, S1, S2, S3, SHARED
+                $SKU = "S1"
+                $SlotName = "swap"
+
+
                 # tag info
                 $Owner = "WebTeam"
                 $CostCenter = "123456"
@@ -115,9 +120,9 @@ stages:
                 if ($result.name -ne $WebApp) {
                     write-host "creating app service plan and webapp"
                     # az appservice plan create -g $RG -l $Location -n $Plan --sku S1 --tags $Tags --is-linux
-                    az appservice plan create -g $RG -l $Location -n $Plan --sku FREE --tags $Tags --is-linux
-                    az webapp create -g $RG -p $Plan -n $WebApp --tags $Tags --runtime '"DOTNETCORE|3.1"'
-                    # az webapp deployment slot create -n $WebApp -g $RG --slot swap
+                    az appservice plan create -g $RG -l $Location -n $Plan --sku $SKU --tags $Tags --is-linux
+                    az webapp create -g $RG -p $Plan -n $WebApp --tags $Tags --runtime $Runtime
+                    # az webapp deployment slot create -n $WebApp -g $RG --slot $SlotName
                 }
                 else
                 {
