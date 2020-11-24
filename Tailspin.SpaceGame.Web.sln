@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tailspin.SpaceGame.Web", "Tailspin.SpaceGame.Web\Tailspin.SpaceGame.Web.csproj", "{A0C4E31E-AC75-4F39-9F59-0AA19D9B8F46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tailspin.SpaceGame.Web.Test", "Tailspin.SpaceGame.Web.Test\Tailspin.SpaceGame.Web.Test.csproj", "{705E5F15-9156-486A-A625-4BAE61A19180}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tailspin.SpaceGame.Web.Tests", "Tailspin.SpaceGame.Web.Test\Tailspin.SpaceGame.Web.Tests.csproj", "{705E5F15-9156-486A-A625-4BAE61A19180}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
