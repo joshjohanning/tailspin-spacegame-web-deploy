@@ -1,6 +1,13 @@
 trigger:
 - blue-green
 
+resources:
+  repositories:
+  - repository: templates
+    type: github
+    name: soccerjoshj07/pipeline-templates
+    endpoint: soccerjoshj07
+
 stages:
 - stage: 'Build'
   variables:
