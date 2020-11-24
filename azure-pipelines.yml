@@ -1,5 +1,5 @@
 trigger:
-- blue-green
+  - blue-green
 
 resources:
   repositories:
