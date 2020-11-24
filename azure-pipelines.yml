@@ -30,33 +30,122 @@ stages:
         vmImage: 'ubuntu-latest'
 
 
-- stage: deployDev
-  displayName: Deploy to Dev
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-  variables: 
-    - name: azureSubscription
-      value: demo-mslearn-tailspin-azure
-  # - group: DEV
-  # - group: ALL-ENV
-  # - name: environment
-  #   value: 'dev'
-  jobs: 
-  - template: dotnet-core/dotnet-core-deploy.yml@templates
-    parameters:
-      services:
-      - name: 'Tailspin.SpaceGame.Web'
-        runDeploy: true
-        environment:
-          name: 'dev'
-        vmImage: 'ubuntu-latest' # Azure
-        replaceTokensTargetFiles: |
-          **/appsettings.tokenize.json => appsettings.json
-          **/connectionstrings.tokenize.json => connectionstrings.json
-        appSettingsEdits: '-ASPNETCORE_ENVIRONMENT Development'
-        jsonVariableSubstituion: 'appsettings.json'
-        azure:
-        - azureSubscription: '${{ variables.azureSubscription }}'
-          webApp:
-          - websiteName: 'app-tailspin-DEV'
-            resourceGroupName: 'rg-tailspin-terraform-DEV'
-            slotName: 'swap'
+- stage: 'Dev'
+  displayName: 'Deploy to the dev environment'
+  dependsOn: Build
+  jobs:
+  - deployment: Deploy
+    pool:
+      vmImage: 'ubuntu-18.04'
+    environment: dev
+    variables:
+    - group: Release
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'demo-mslearn-tailspin-azure'
+              scriptType: 'pscore'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                # Creates Resource Group, App Plan, and Web App
+                
+                # Azure Resource Info
+                $RG = "tailspin-space-game-rg2"
+                $Location = "centralus"
+                $Plan = "ASP-tailspinspacegamerg-free2"
+                $WebApp = "dev-josh-space-game2"
+                # Runtime accepted values: Run "az webapp list-runtimes" to see a full list, use 'aspnet|V4.7' for full framework and remove --is-linux flag in app service plan
+                $Runtime = '"DOTNETCORE|3.1"'
+                # SKU accepted values: B1, B2, B3, D1, F1, FREE, I1, I2, I3, P1V2, P1V3, P2V2, P2V3, P3V2, P3V3, PC2, PC3, PC4, S1, S2, S3, SHARED
+                $SKU = "S1"
+                $SlotName = "swap"
+
+
+                # tag info
+                $Owner = "WebTeam"
+                $CostCenter = "123456"
+                $Program = "web"
+                $Tags = @("Owner=$Owner", "CostCenter=$CostCenter", "Program=$Program")
+                
+                # create resoure group if doesn't exist
+                az group create -l $Location -n $RG --tags $Tags
+                
+                # create app service and webapp if webapp doesn't exist
+                $result = az webapp list -g $RG | ConvertFrom-Json
+                if ($result.name -ne $WebApp) {
+                    write-host "creating app service plan and webapp"
+                    # az appservice plan create -g $RG -l $Location -n $Plan --sku S1 --tags $Tags --is-linux
+                    az appservice plan create -g $RG -l $Location -n $Plan --sku $SKU --tags $Tags --is-linux
+                    az webapp create -g $RG -p $Plan -n $WebApp --tags $Tags --runtime $Runtime
+                    # az webapp deployment slot create -n $WebApp -g $RG --slot $SlotName
+                }
+                else
+                {
+                    write-host "web app already created"
+                }
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: '$(pipeline.workspace)/**/*.zip'
+              cleanDestinationFolder: true
+              destinationFolder: $(pipeline.workspace)/extract
+
+          # - task: colinsalmcorner.colinsalmcorner-buildtasks.replace-tokens-task.ReplaceTokens@1
+          #   inputs:
+          #     sourcePath: '$(pipeline.workspace)/extract'
+          #     filePattern: '**/appsettings.json'
+          #     tokenRegex: '__(\w+)__'
+              
+          - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+            displayName: 'Replace tokens'
+            inputs:
+              rootDirectory: '$(pipeline.workspace)'
+              targetFiles: '**/appsettings.json'
+              escapeType: none
+              verbosity: detailed
+          
+          - task: AzureWebApp@1
+            displayName: 'Azure App Service Deploy: website'
+            inputs:
+              azureSubscription: 'demo-mslearn-tailspin-azure'
+              appName: 'dev-josh-space-game'
+              package: '$(pipeline.workspace)/extract'
+              
+  - job: smoketest
+    dependsOn: Deploy
+    steps:
+      - script: curl -I dev-josh-space-game.azurewebsites.net
+
+# - stage: deployDev
+#   displayName: Deploy to Dev
+#   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+#   variables: 
+#     - name: azureSubscription
+#       value: demo-mslearn-tailspin-azure
+#   # - group: DEV
+#   # - group: ALL-ENV
+#   # - name: environment
+#   #   value: 'dev'
+#   jobs: 
+#   - template: dotnet-core/dotnet-core-deploy.yml@templates
+#     parameters:
+#       services:
+#       - name: 'Tailspin.SpaceGame.Web'
+#         runDeploy: true
+#         environment:
+#           name: 'dev'
+#         vmImage: 'ubuntu-latest' # Azure
+#         replaceTokensTargetFiles: |
+#           **/appsettings.tokenize.json => appsettings.json
+#           **/connectionstrings.tokenize.json => connectionstrings.json
+#         appSettingsEdits: '-ASPNETCORE_ENVIRONMENT Development'
+#         jsonVariableSubstituion: 'appsettings.json'
+#         azure:
+#         - azureSubscription: '${{ variables.azureSubscription }}'
+#           webApp:
+#           - websiteName: 'app-tailspin-DEV'
+#             resourceGroupName: 'rg-tailspin-terraform-DEV'
+#             slotName: 'swap'
