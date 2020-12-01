@@ -29,6 +29,67 @@ stages:
         runDotNetCoreTests: 'true'
         vmImage: 'ubuntu-latest'
 
+- stage: deployDev
+  displayName: Deploy to Dev
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  variables: 
+    - name: azureSubscription
+      value: demo-mslearn-tailspin-azure
+  # - group: DEV
+  # - group: ALL-ENV
+  # - name: environment
+  #   value: 'dev'
+  jobs: 
+  - template: dotnet-core/dotnet-core-deploy.yml@templates
+    parameters:
+      services:
+      - name: 'Tailspin.SpaceGame.Web'
+        runDeploy: true
+        environment:
+          name: 'dev'
+        vmImage: 'ubuntu-latest' # Azure
+        replaceTokensTargetFiles: |
+          **/appsettings.tokenize.json => appsettings.json
+          **/connectionstrings.tokenize.json => connectionstrings.json
+        appSettingsEdits: '-ASPNETCORE_ENVIRONMENT Development'
+        jsonVariableSubstituion: 'appsettings.json'
+        azure:
+        - azureSubscription: '${{ variables.azureSubscription }}'
+          webApp:
+          - websiteName: 'app-tailspin-DEV'
+            resourceGroupName: 'rg-tailspin-terraform-DEV'
+            slotName: 'swap'
+
+- stage: deployProd
+  displayName: Deploy to Prod
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  variables: 
+    - name: azureSubscription
+      value: demo-mslearn-tailspin-azure
+  # - group: DEV
+  # - group: ALL-ENV
+  # - name: environment
+  #   value: 'dev'
+  jobs: 
+  - template: dotnet-core/dotnet-core-deploy.yml@templates
+    parameters:
+      services:
+      - name: 'Tailspin.SpaceGame.Web'
+        runDeploy: true
+        environment:
+          name: 'prod'
+        vmImage: 'ubuntu-latest' # Azure
+        replaceTokensTargetFiles: |
+          **/appsettings.tokenize.json => appsettings.json
+          **/connectionstrings.tokenize.json => connectionstrings.json
+        appSettingsEdits: '-ASPNETCORE_ENVIRONMENT Development'
+        jsonVariableSubstituion: 'appsettings.json'
+        azure:
+        - azureSubscription: '${{ variables.azureSubscription }}'
+          webApp:
+          - websiteName: 'app-tailspin-PROD'
+            resourceGroupName: 'rg-tailspin-terraform-PROD'
+            slotName: 'swap'
 
 # - stage: 'Dev'
 #   displayName: 'Deploy to the dev environment'
@@ -119,33 +180,3 @@ stages:
 #     steps:
 #       - script: curl -I dev-josh-space-game.azurewebsites.net
 
-- stage: deployDev
-  displayName: Deploy to Dev
-  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
-  variables: 
-    - name: azureSubscription
-      value: demo-mslearn-tailspin-azure
-  # - group: DEV
-  # - group: ALL-ENV
-  # - name: environment
-  #   value: 'dev'
-  jobs: 
-  - template: dotnet-core/dotnet-core-deploy.yml@templates
-    parameters:
-      services:
-      - name: 'Tailspin.SpaceGame.Web'
-        runDeploy: true
-        environment:
-          name: 'dev'
-        vmImage: 'ubuntu-latest' # Azure
-        replaceTokensTargetFiles: |
-          **/appsettings.tokenize.json => appsettings.json
-          **/connectionstrings.tokenize.json => connectionstrings.json
-        appSettingsEdits: '-ASPNETCORE_ENVIRONMENT Development'
-        jsonVariableSubstituion: 'appsettings.json'
-        azure:
-        - azureSubscription: '${{ variables.azureSubscription }}'
-          webApp:
-          - websiteName: 'app-tailspin-DEV'
-            resourceGroupName: 'rg-tailspin-terraform-DEV'
-            slotName: 'swap'
