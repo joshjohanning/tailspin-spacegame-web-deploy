@@ -37,8 +37,7 @@ stages:
   variables: 
     - name: azureSubscription
       value: demo-mslearn-tailspin-azure
-  # - group: DEV
-  # - group: ALL-ENV
+    - group: tailspin.DEV
   # - name: environment
   #   value: 'dev'
   jobs: 
@@ -68,7 +67,7 @@ stages:
   variables: 
     - name: azureSubscription
       value: demo-mslearn-tailspin-azure
-  # - group: DEV
+    - group: tailspin.PROD
   # - group: ALL-ENV
   # - name: environment
   #   value: 'dev'
