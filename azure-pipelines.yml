@@ -83,7 +83,7 @@ stages:
         replaceTokensTargetFiles: |
           **/appsettings.tokenize.json => appsettings.json
           **/connectionstrings.tokenize.json => connectionstrings.json
-        appSettingsEdits: '-ASPNETCORE_ENVIRONMENT Development'
+        appSettingsEdits: '-ASPNETCORE_ENVIRONMENT Production'
         jsonVariableSubstituion: 'appsettings.json'
         azure:
         - azureSubscription: '${{ variables.azureSubscription }}'
