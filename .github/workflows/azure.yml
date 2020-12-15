@@ -38,10 +38,12 @@ jobs:
         name: drop
         path: ${{ github.workspace }}/a/Tailspin.SpaceGame.Web
     
-  deploy:
-    name: deploy
+  deployDev:
+    name: deployDev
     runs-on: ubuntu-latest
     environment: Dev
+    needs: 
+      - build
     steps:
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2
