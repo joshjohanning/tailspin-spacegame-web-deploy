@@ -65,3 +65,42 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+    
+    
+      Detect-Errors:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp', 'javascript' ]
+    needs:
+      - analyze
+    steps:
+    - name: Download Sarif Report
+      uses: actions/download-artifact@v2
+      with:
+        name: sarif-report
+
+    - name: Detect Errors
+      run: |
+        
+        results=$(cat ${{ github.workspace }}/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].level')
+
+        if [ -z "$results" ]; then count=0; else count=$(echo "$results" | grep -c '^'); fi
+
+        echo "Results: $count"
+        echo ""
+
+        errorCount=$(echo "$results" | grep -c error)
+        warningCount=$(echo "$results" | grep -c warning)
+        noteCount=$(echo "$results" | grep -c note)
+        
+        echo "Error Count: $errorCount"
+        echo "Warning Count: $warningCount"
+        echo "Note Count: $noteCount"
+        echo ""
+
+        if (( $errorCount > 0 )); then
+            echo "errors found - failing detect error check..."
+            exit -1
+        fi
