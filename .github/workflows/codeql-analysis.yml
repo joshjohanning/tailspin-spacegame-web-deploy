@@ -93,6 +93,8 @@ jobs:
         results=$(cat $repo/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].ruleId')
 
         read -a resultsArray <<< $results
+        
+        echo "${resultsArray[*]}"
 
         errorCount=0
         warningCount=0
