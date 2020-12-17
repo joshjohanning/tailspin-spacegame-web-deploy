@@ -90,15 +90,35 @@ jobs:
     - name: Detect Errors
       run: |
         repo=$(echo ${{ github.repository }} | awk -F'/' '{print $2}')
+        results=$(cat $repo/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].ruleId')
 
-        results=$(cat $repo/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].level')
+        read -a resultsArray <<< $results
 
-        if [ -z "$results" ]; then count=0; else count=$(echo "$results" | grep -c '^'); fi
+        errorCount=0
+        warningCount=0
+        noteCount=0
 
-        echo "Results: $count"
+        for var in "${resultsArray[@]}"
+        do
+          severity=$(cat ~/Downloads/sarif-report-javascript/tailspin-spacegame-web-deploy/results/javascript-builtin.sarif | jq -r '.runs[].tool.driver.rules[] | select(.id=="'$var'").properties."problem.severity"')
+          echo "${var} | $severity"
+          if [ "$severity" == "warning" ]; then let warningCount+=1; fi
+          if [ "$severity" == "error" ]; then let errorount+=1; fi
+          if [ "$severity" == "note" ]; then let noteount+=1; fi
+        done
+
+        echo ""
+        echo "Error Count: $errorCount"
+        echo "Warning Count: $warningCount"
+        echo "Note Count: $noteCount"
         echo ""
 
-        if (( $count > 0 )); then
-            echo "issues found - failing detect vulnerabilities check..."
+        if (( $errorCount > 0 )); then
+            echo "errors found - failing detect error check..."
+            exit -1
+        fi
+
+        if (( $warningCount > 0 )); then
+            echo "warnings found - failing detect warning check..."
             exit -1
         fi
