@@ -63,6 +63,12 @@ jobs:
     #   make bootstrap
     #   make release
 
+    - name: Upload Sarif Report to Workflow
+      uses: actions/upload-artifact@v2
+      with:
+        name: sarif-report
+        path: ${{ github.workspace }}/results/${{ matrix.language }}-builtin.sarif
+
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
     
@@ -79,7 +85,7 @@ jobs:
     - name: Download Sarif Report
       uses: actions/download-artifact@v2
       with:
-        name: sarif-report
+        name: sarif-report-${{ matrix.language }}
 
     - name: Detect Errors
       run: |
