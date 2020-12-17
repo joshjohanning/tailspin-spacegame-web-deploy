@@ -67,7 +67,7 @@ jobs:
       uses: github/codeql-action/analyze@v1
     
     
-      Detect-Errors:
+  Detect-Errors:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -83,7 +83,7 @@ jobs:
 
     - name: Detect Errors
       run: |
-        
+
         results=$(cat ${{ github.workspace }}/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].level')
 
         if [ -z "$results" ]; then count=0; else count=$(echo "$results" | grep -c '^'); fi
@@ -94,7 +94,7 @@ jobs:
         errorCount=$(echo "$results" | grep -c error)
         warningCount=$(echo "$results" | grep -c warning)
         noteCount=$(echo "$results" | grep -c note)
-        
+
         echo "Error Count: $errorCount"
         echo "Warning Count: $warningCount"
         echo "Note Count: $noteCount"
