@@ -90,7 +90,7 @@ jobs:
     - name: Detect Errors
       run: |
 
-        results=$(cat ${{ github.workspace }}/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].level')
+        results=$(cat /home/runner/work/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].level')
 
         if [ -z "$results" ]; then count=0; else count=$(echo "$results" | grep -c '^'); fi
 
