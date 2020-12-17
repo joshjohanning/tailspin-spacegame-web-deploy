@@ -70,7 +70,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: sarif-report
-        path: ${{ github.workspace }}/**/*.sarif
+        path: home/runner/work/**/*.sarif
     
     
   Detect-Errors:
