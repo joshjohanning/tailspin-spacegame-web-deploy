@@ -69,8 +69,8 @@ jobs:
     - name: Upload Sarif Report to Workflow
       uses: actions/upload-artifact@v2
       with:
-        name: sarif-report
-        path: ${{ github.workspace }}/../**/*.sarif
+        name: sarif-report-${{ matrix.language }}
+        path: /home/runner/work/**/*.sarif
     
     
   Detect-Errors:
