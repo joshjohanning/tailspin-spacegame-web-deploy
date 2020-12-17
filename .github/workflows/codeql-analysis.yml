@@ -89,8 +89,9 @@ jobs:
 
     - name: Detect Errors
       run: |
+        repo=$(echo ${{ github.repository }} | awk -F'/' '{print $2}')
 
-        results=$(cat /home/runner/work/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].level')
+        results=$(cat /home/runner/work/results/$repo/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].level')
 
         if [ -z "$results" ]; then count=0; else count=$(echo "$results" | grep -c '^'); fi
 
