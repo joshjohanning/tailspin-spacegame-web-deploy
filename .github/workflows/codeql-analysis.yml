@@ -100,7 +100,7 @@ jobs:
 
         for var in "${resultsArray[@]}"
         do
-          severity=$(cat ~/Downloads/sarif-report-javascript/tailspin-spacegame-web-deploy/results/javascript-builtin.sarif | jq -r '.runs[].tool.driver.rules[] | select(.id=="'$var'").properties."problem.severity"')
+          severity=$(cat $repo/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].tool.driver.rules[] | select(.id=="'$var'").properties."problem.severity"')
           echo "${var} | $severity"
           if [ "$severity" == "warning" ]; then let warningCount+=1; fi
           if [ "$severity" == "error" ]; then let errorount+=1; fi
