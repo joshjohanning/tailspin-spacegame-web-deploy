@@ -89,6 +89,8 @@ jobs:
 
     - name: Detect Errors
       run: |
+        ls -a -R
+        
         repo=$(echo ${{ github.repository }} | awk -F'/' '{print $2}')
 
         results=$(cat /home/runner/work/$repo/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].level')
