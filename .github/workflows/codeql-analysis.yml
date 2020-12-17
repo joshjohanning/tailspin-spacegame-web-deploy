@@ -92,7 +92,7 @@ jobs:
         repo=$(echo ${{ github.repository }} | awk -F'/' '{print $2}')
         results=$(cat $repo/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].ruleId')
 
-        read -a resultsArray <<< $results
+        resultsArray=($results)
         
         echo "${resultsArray[*]}"
 
