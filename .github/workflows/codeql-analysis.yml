@@ -89,8 +89,6 @@ jobs:
 
     - name: Detect Errors
       run: |
-        ls -a -R
-        
         repo=$(echo ${{ github.repository }} | awk -F'/' '{print $2}')
 
         results=$(cat $repo/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].level')
@@ -100,16 +98,7 @@ jobs:
         echo "Results: $count"
         echo ""
 
-        errorCount=$(echo "$results" | grep -c error)
-        warningCount=$(echo "$results" | grep -c warning)
-        noteCount=$(echo "$results" | grep -c note)
-
-        echo "Error Count: $errorCount"
-        echo "Warning Count: $warningCount"
-        echo "Note Count: $noteCount"
-        echo ""
-
-        if (( $errorCount > 0 )); then
-            echo "errors found - failing detect error check..."
+        if (( $count > 0 )); then
+            echo "issues found - failing detect vulnerabilities check..."
             exit -1
         fi
