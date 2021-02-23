@@ -17,7 +17,7 @@ stages:
     dotnetSdkVersion: '3.1.300'
     buildConfiguration: 'Release'
   jobs: 
-  - template: dotnet-core/dotnet-core-build.yml@templates
+  - template: dotnet-core-web/dotnet-core-build.yml@templates
     parameters:
       buildConfiguration: '${{ variables.buildConfiguration }}'
       nugetFeed: ''
@@ -39,7 +39,7 @@ stages:
       value: demo-mslearn-tailspin-azure
     - group: tailspin.DEV
   jobs: 
-  - template: dotnet-core/dotnet-core-deploy.yml@templates
+  - template: dotnet-core-web/dotnet-core-deploy.yml@templates
     parameters:
       services:
       - name: 'Tailspin.SpaceGame.Web'
@@ -67,7 +67,7 @@ stages:
       value: demo-mslearn-tailspin-azure
     - group: tailspin.PROD
   jobs: 
-  - template: dotnet-core/dotnet-core-deploy.yml@templates
+  - template: dotnet-core-web/dotnet-core-deploy.yml@templates
     parameters:
       services:
       - name: 'Tailspin.SpaceGame.Web'
