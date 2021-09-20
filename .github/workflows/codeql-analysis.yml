@@ -13,7 +13,7 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ blue-green ]
+    branches: [ extending-codeql ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ blue-green ]
@@ -65,3 +65,62 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
+
+    - name: Upload Sarif Report to Workflow
+      uses: actions/upload-artifact@v2
+      with:
+        name: sarif-report-${{ matrix.language }}
+        path: /home/runner/work/**/*.sarif
+    
+    
+  Detect-Errors:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'csharp', 'javascript' ]
+    needs:
+      - analyze
+    steps:
+    - name: Download Sarif Report
+      uses: actions/download-artifact@v2
+      with:
+        name: sarif-report-${{ matrix.language }}
+
+    - name: Detect Errors
+      run: |
+        repo=$(echo ${{ github.repository }} | awk -F'/' '{print $2}')
+        results=$(cat $repo/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].results[].ruleId')
+
+        resultsArray=($results)
+        
+        echo "${resultsArray[*]}"
+
+        errorCount=0
+        warningCount=0
+        noteCount=0
+
+        for var in "${resultsArray[@]}"
+        do
+          severity=$(cat $repo/results/${{ matrix.language }}-builtin.sarif | jq -r '.runs[].tool.driver.rules[] | select(.id=="'$var'").properties."problem.severity"')
+          echo "${var} | $severity"
+          if [ "$severity" == "warning" ]; then let warningCount+=1; fi
+          if [ "$severity" == "error" ]; then let errorount+=1; fi
+          if [ "$severity" == "note" ]; then let noteount+=1; fi
+        done
+
+        echo ""
+        echo "Error Count: $errorCount"
+        echo "Warning Count: $warningCount"
+        echo "Note Count: $noteCount"
+        echo ""
+
+        if (( $errorCount > 0 )); then
+            echo "errors found - failing detect error check..."
+            exit -1
+        fi
+
+        if (( $warningCount > 0 )); then
+            echo "warnings found - failing detect warning check..."
+            exit -1
+        fi
