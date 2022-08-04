@@ -18,19 +18,18 @@ stages:
     dotnetSdkVersion: '3.1.300'
     buildConfiguration: 'Release'
   jobs: 
-  - template: dotnet-core-web/dotnet-core-build.yml@templates
+  - template: dotnet-core-web/dotnet-core-build-simple-web-app.yml@templates
     parameters:
       buildConfiguration: '${{ variables.buildConfiguration }}'
       nugetFeed: ''
-      services:
-      - name: 'Tailspin.SpaceGame.Web'
-        projectFile: '**/Tailspin.SpaceGame.Web.csproj'
-        repo: 'self'
-        runSonarQube: 'false'
-        sonarProjectKey: '*'
-        sonarProjectName: 'Tailspin.SpaceGame.Web'
-        runDotNetCoreTests: 'true'
-        vmImage: 'ubuntu-latest'
+      name: 'Tailspin.SpaceGame.Web'
+      projectFile: '**/Tailspin.SpaceGame.Web.csproj'
+      repo: 'self'
+      runSonarQube: 'false'
+      sonarProjectKey: '*'
+      sonarProjectName: 'Tailspin.SpaceGame.Web'
+      runDotNetCoreTests: 'true'
+      vmImage: 'ubuntu-latest'
 
 - stage: deployDev
   displayName: Deploy to Dev
